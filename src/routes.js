@@ -7,6 +7,8 @@ import StudentController from './app/controllers/StudentController';
 import PlanController from './app/controllers/PlanController';
 import RegistrationController from './app/controllers/RegistrationController';
 import CheckinController from './app/controllers/CheckinController';
+import HelpOrderController from './app/controllers/HelpOrderController';
+import AnswerController from './app/controllers/AnswerController';
 
 import authMiddleware from './app/middlewares/auth';
 import checkStudentExists from './app/middlewares/checkStudentExists';
@@ -26,6 +28,17 @@ routes.get(
   '/students/:id/checkins',
   checkStudentExists,
   CheckinController.index
+);
+
+routes.get(
+  '/students/:id/help-orders',
+  checkStudentExists,
+  HelpOrderController.index
+);
+routes.post(
+  '/students/:id/help-orders',
+  checkStudentExists,
+  HelpOrderController.store
 );
 
 routes.use(authMiddleware);
@@ -59,6 +72,9 @@ routes.delete(
   checkRegistrationExists,
   RegistrationController.delete
 );
+
+routes.get('/help-orders/answer', AnswerController.index);
+routes.post('/help-orders/:id/answer', AnswerController.store);
 
 routes.post('/files', upload.single('file'), (req, res) => {
   return res.json(req.file);
