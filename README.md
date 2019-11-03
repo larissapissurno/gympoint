@@ -7,5 +7,3 @@
 </h3>
 
 > API REST implementada com Node.js para o gerenciamento de academia.
-
-[![NPM Version][npm-image]][npm-url]
