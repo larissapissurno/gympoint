@@ -1,6 +1,11 @@
 import * as Yup from 'yup';
 
 import Registration from '../models/Registration';
+import Student from '../models/Student';
+import Plan from '../models/Plan';
+
+import RegistrationMail from '../jobs/RegistrationMail';
+import Queue from '../../lib/Queue';
 
 class RegistrationController {
   async index(req, res) {
@@ -35,6 +40,24 @@ class RegistrationController {
     }
 
     const registration = await Registration.create(req.body);
+    const { student, plan } = await Registration.findByPk(registration.id, {
+      include: [
+        {
+          model: Student,
+          as: 'student',
+        },
+        {
+          model: Plan,
+          as: 'plan',
+        },
+      ],
+    });
+
+    await Queue.add(RegistrationMail.key, {
+      student,
+      plan,
+      registration,
+    });
 
     return res.json(registration);
   }
